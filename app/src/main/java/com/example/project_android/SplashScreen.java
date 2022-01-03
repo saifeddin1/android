@@ -19,7 +19,7 @@ public class SplashScreen extends Activity {
                 try {
                     int delay = 0;
                     while (delay < 2000) {
-                        sleep(200);
+                        sleep(170);
                         delay = delay + 100;
                     }
                     startActivity(new Intent(SplashScreen.this, MainActivity.class));

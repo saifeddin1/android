@@ -7,7 +7,9 @@ import android.service.controls.actions.ControlAction;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -19,6 +21,8 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.apache.commons.io.FileUtils;
 
@@ -36,21 +40,46 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
+        registerForContextMenu(lvItems);
         items = new ArrayList<String>();
         readItems();
 
         itemsAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
-        setupListViewListener();
+        //
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.delete_item, menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()){
+            case R.id.del:
+
+                items.remove((int)info.id);
+                itemsAdapter.notifyDataSetChanged();
+                writeItems();
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+
+
+        }
     }
 
     private void setupListViewListener() {

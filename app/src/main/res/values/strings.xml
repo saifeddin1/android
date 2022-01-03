@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">project_android</string>
+    <string name="delete">Delete</string>
 </resources>
